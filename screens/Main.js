@@ -10,7 +10,6 @@ import {
     TouchableOpacity,
     Image
 } from 'react-native';
-
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
 import * as Permissions from "expo-permissions";
@@ -29,49 +28,58 @@ import Filter8 from './Filter8'
 import Filter9 from './Filter9'
 import Filter10 from './Filter10'
 
-let data = [
-    {
-        "id": "1",
-        "image": require('../assets/glasses.png')
-    },
-    {
-        "id": "2",
-        "image": require('../assets/glasses-round.png')
-    },
-    {
-        "id": "3",
-        "image": require('../assets/Frapp-02.png')
-    },
-    {
-        "id": "4",
-        "image": require('../assets/Frapp-03.png')
-    },
-    {
-        "id": "5",
-        "image": require('../assets/Frapp-04.png')
-    },
-    {
-        "id": "6",
-        "image": require('../assets/Frapp-05.png')
-    },
-    {
-        "id": "7",
-        "image": require('../assets/Frapp-06.png')
-    },
-    {
-        "id": "8",
-        "image": require('../assets/Frapp-07.png')
-    },
-    {
-        "id": "9",
-        "image": require('../assets/Frapp-08.png')
-    },
-    {
-        "id": "10",
-        "image": require('../assets/Frapp-09.png')
-    }
-
-]
+let data = {
+    "regular": [
+        {
+            "id": "1",
+            "image": require('../assets/glasses.png')
+        }
+    ],
+    "wayfarer": [
+        {
+            "id": "4",
+            "image": require('../assets/Frapp-03.png')
+        },
+        {
+            "id": "5",
+            "image": require('../assets/Frapp-04.png')
+        }
+    ],
+    "rimless": [
+        {
+            "id": "10",
+            "image": require('../assets/Frapp-09.png')
+        }
+    ],
+    "round": [
+        {
+            "id": "2",
+            "image": require('../assets/glasses-round.png')
+        },
+        {
+            "id": "3",
+            "image": require('../assets/Frapp-02.png')
+        }
+    ],
+    "aviator": [
+        {
+            "id": "6",
+            "image": require('../assets/Frapp-05.png')
+        },
+        {
+            "id": "7",
+            "image": require('../assets/Frapp-06.png')
+        },
+        {
+            "id": "8",
+            "image": require('../assets/Frapp-07.png')
+        },
+        {
+            "id": "9",
+            "image": require('../assets/Frapp-08.png')
+        }
+    ]
+}
 
 export default class Main extends React.Component {
     constructor(props) {
@@ -79,7 +87,8 @@ export default class Main extends React.Component {
         this.state = {
             hasCameraPermission: null,
             faces: [],
-            current_filter: "filter_1"
+            current_filter: "filter_1",
+            selected: "aviator"
         }
         this.onCameraPermission = this.onCameraPermission.bind(this)
         this.onFacesDetected = this.onFacesDetected.bind(this)
@@ -166,9 +175,26 @@ export default class Main extends React.Component {
                     }
                 </View>
                 <View style={styles.framesContainer}>
-                    <ScrollView style={{ flexDirection: "row" }} horizontal showsHorizontalScrollIndicator={false}>
+                    <View style={styles.categoryContainer}>
+                        <TouchableOpacity style={this.state.selected == "regular" ? styles.categoryBoxSelected : styles.categoryBox} onPress={() => this.setState({ selected: `regular` })}>
+                            <Text>Regular</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={this.state.selected == "wayfarer" ? styles.categoryBoxSelected : styles.categoryBox} onPress={() => this.setState({ selected: `wayfarer` })}>
+                            <Text>Wayfarer</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={this.state.selected == "rimless" ? styles.categoryBoxSelected : styles.categoryBox} onPress={() => this.setState({ selected: `rimless` })}>
+                            <Text>Rimless</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={this.state.selected == "round" ? styles.categoryBoxSelected : styles.categoryBox} onPress={() => this.setState({ selected: `round` })}>
+                            <Text>Round</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={this.state.selected == "aviator" ? styles.categoryBoxSelected : styles.categoryBox} onPress={() => this.setState({ selected: `aviator` })}>
+                            <Text>Aviator</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <ScrollView style={{ flexDirection: "row", flex: 0.6 }} horizontal showsHorizontalScrollIndicator={false}>
                         {
-                            data.map(filter_data => {
+                            data[this.state.selected].map(filter_data => {
                                 return (
                                     <TouchableOpacity style={styles.filterImageContainer} onPress={() => this.setState({ current_filter: `filter_${filter_data.id}` })}>
                                         <Image source={filter_data.image} style={{ height: 32, width: 80 }} />
@@ -237,7 +263,7 @@ const styles = StyleSheet.create({
         flex: 0.2,
         paddingLeft: RFValue(20),
         paddingRight: RFValue(20),
-        paddingTop: RFValue(30),
+        paddingTop: RFValue(10),
         backgroundColor: "#6278e4"
     },
     filterImageContainer: {
@@ -248,5 +274,32 @@ const styles = StyleSheet.create({
         backgroundColor: "#e4e7f8",
         borderRadius: 30,
         marginRight: 20
+    },
+    categoryContainer: {
+        flex: 0.4,
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
+        marginBottom: RFValue(10)
+    },
+    categoryBox: {
+        flex: 0.2,
+        borderRadius: 30,
+        borderWidth: 1,
+        backgroundColor: "white",
+        width: "100%",
+        padding: RFValue(3),
+        margin: 1,
+        alignItems: "center"
+    },
+    categoryBoxSelected: {
+        flex: 0.2,
+        borderRadius: 30,
+        borderWidth: 1,
+        backgroundColor: "#efb141",
+        width: "100%",
+        padding: RFValue(3),
+        margin: 1,
+        alignItems: "center"
     }
 });
